@@ -2,25 +2,22 @@
 
 var bokApp = angular.module('bibliotekAngularApp');
 
-bokApp.controller('MainCtrl', function ($scope) {
-    $scope.books = [
-      'Frost',
-      'The Hobbit',
-      'Lone Survivor',
-      'The Hunger Games: Catching Fire'
-    ];
-});
+bokApp.controller('MainCtrl', ['$scope', 'bokService', function($scope, bokService) {
+    $scope.boker = bokService.boker();
+}]);
 
 bokApp.controller('NyBokCtrl', ['$scope', 'bokService', function($scope, bokService) {
     $scope.bok = {};
-    $scope.lagreBok = function(){
-
-    };
+    $scope.lagreBok = bokService.lagreBok($scope.bok);
 }]);
 
 // SERVICES
 bokApp.service('bokService', function() {
-    var boker = [];
+    var boker = [{tittel:'Frost', forfatter:'Jan Banan'},
+                 {tittel:'The Hobbit', forfatter:'Per Persen'},
+                 {tittel:'Lone Survivor', forfatter:'Ola Normann'},
+                 {tittel:'The Hunger Games: Catching Fire', forfatter:'Hans Hansen'}
+                 ];
 
     return {
         boker:function () {

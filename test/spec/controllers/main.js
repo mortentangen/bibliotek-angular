@@ -17,7 +17,7 @@ describe('Controller: MainCtrl', function () {
     });
   }));
 
-  it('skal returnere 0 bøker initielt ', function () {
-    expect(scope.awesomeThings.length).toBe(0);
+  it('skal returnere 4 bøker initielt ', function () {
+    expect(scope.boker.length).toBe(0);
   });
 });
