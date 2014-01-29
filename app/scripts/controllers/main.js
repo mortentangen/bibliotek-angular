@@ -6,18 +6,29 @@ bokApp.controller('MainCtrl', ['$scope', 'bokService', function($scope, bokServi
     $scope.boker = bokService.boker();
 }]);
 
-bokApp.controller('NyBokCtrl', ['$scope', 'bokService', function($scope, bokService) {
+bokApp.controller('NyBokCtrl', ['$scope', '$location', 'bokService', function($scope, $location, bokService) {
     $scope.bok = {};
-    $scope.lagreBok = bokService.lagreBok($scope.bok);
+    $scope.lagreBok = function() {
+            bokService.lagreBok($scope.bok);
+            alert("lagreBok");
+            $location.path('/');
+        }
+}]);
+
+bokApp.controller('HeaderController', ['$scope', '$location', function($scope, $location) {
+    $scope.isActive = function(viewLocation) {
+        return viewLocation === $location.path();
+    }
 }]);
 
 // SERVICES
 bokApp.service('bokService', function() {
-    var boker = [{tittel:'Frost', forfatter:'Jan Banan'},
-                 {tittel:'The Hobbit', forfatter:'Per Persen'},
-                 {tittel:'Lone Survivor', forfatter:'Ola Normann'},
-                 {tittel:'The Hunger Games: Catching Fire', forfatter:'Hans Hansen'}
-                 ];
+    var boker = [
+        {tittel:'Frost', forfatter:'Jan Banan'},
+        {tittel:'The Hobbit', forfatter:'Per Persen'},
+        {tittel:'Lone Survivor', forfatter:'Ola Normann'},
+        {tittel:'The Hunger Games: Catching Fire', forfatter:'Hans Hansen'}
+        ];
 
     return {
         boker:function () {
