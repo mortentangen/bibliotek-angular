@@ -9,10 +9,12 @@ bokApp.controller('MainCtrl', ['$scope', 'bokService', function($scope, bokServi
 bokApp.controller('NyBokCtrl', ['$scope', '$location', 'bokService', function($scope, $location, bokService) {
     $scope.bok = {};
     $scope.lagreBok = function() {
-            bokService.lagreBok($scope.bok);
-            alert("lagreBok");
-            $location.path('/');
-        }
+        bokService.lagreBok($scope.bok);
+        $location.path('/');
+    }
+    $scope.validateInput = function(field) {
+        return field.$invalid && field.$dirty
+    }
 }]);
 
 bokApp.controller('HeaderController', ['$scope', '$location', function($scope, $location) {
