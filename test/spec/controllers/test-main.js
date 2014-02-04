@@ -18,6 +18,6 @@ describe('Controller: MainCtrl', function () {
   }));
 
   it('skal returnere 4 bøker initielt ', function () {
-    expect(scope.boker.length).toBe(0);
+    expect(scope.boker.length).toBe(4);
   });
 });
