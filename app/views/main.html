@@ -1,7 +1,8 @@
-<div>
-    <ul class="list-group">
-        <li class="list-group-item" ng-repeat="bok in boker">{{bok.tittel}}</li>
-    </ul>
-</div>
+<table class="table table-hover">
+    <tr ng-repeat="bok in boker" ng-click="velgBok(bok)">
+        <td>{{bok.tittel}} ({{bok}})</td>
+    </tr>
+</table>
+
 
 
