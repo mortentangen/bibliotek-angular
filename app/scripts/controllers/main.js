@@ -1,11 +1,11 @@
 'use strict';
 
-var bokApp = angular.module('bibliotekAngularApp');
+var bokApp = angular.module("bibliotekAngularApp");
 
 bokApp.controller('MainCtrl', ['$scope', '$location', 'bokService', function($scope, $location, bokService) {
     $scope.boker = bokService.boker();
-    $scope.velgBok = function(bok) {
-        $location.path('/bok/' + bok.id);
+    $scope.velgBok = function(bokId) {
+        $location.path('/bok/' + bokId);
     }
 }]);
 
@@ -31,7 +31,7 @@ bokApp.controller('BokCtrl', ['$scope', '$location', '$routeParams', 'bokService
     $scope.editer = function() {
         bokFoerEditering = angular.copy($scope.bok);
     }
-    $scope.editorEnabled = false;
+    $scope.editorEnabled = true;
 }]);
 
 bokApp.controller('HeaderController', ['$scope', '$location', function($scope, $location) {
@@ -41,7 +41,7 @@ bokApp.controller('HeaderController', ['$scope', '$location', function($scope, $
 }]);
 
 // SERVICES
-bokApp.service('bokService', function() {
+bokApp.service('bokServiceMock', function() {
     var idSekvens = 0;
     var boker = [
         {id: idSekvens++, tittel:'Frost', forfatter:'Jan Banan'},
@@ -67,3 +67,20 @@ bokApp.service('bokService', function() {
         }
     };
 });
+
+bokApp.service('bokService', ['$firebase', function($firebase) {
+    var ref = new Firebase("https://popping-fire-1561.firebaseio.com/");
+    var boker = $firebase(ref);
+
+    return {
+        boker: function () {
+            return boker;
+        },
+        lagreBok: function(bok) {
+            var ref = boker.$add(bok);
+        },
+        getBok: function(id) {
+            return boker[id];
+        }
+    };
+}]);
