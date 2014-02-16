@@ -9,15 +9,36 @@ bokApp.controller('MainCtrl', ['$scope', '$location', 'bokService', function($sc
     }
 }]);
 
-bokApp.controller('BokCtrl', ['$scope', '$location', '$routeParams', 'bokService', function($scope, $location, $routeParams, bokService) {
+bokApp.controller('VisBokCtrl', ['$scope', '$location', '$routeParams', 'bokService', function($scope, $location, $routeParams, bokService) {
+    $scope.editorEnabled = false;
+    $scope.bok = bokService.getBok($routeParams.id);
+    $scope.editer = function() {
+        $location.path('/bok/'+$routeParams.id+'/edit');
+    }
+}]);
+
+bokApp.controller('EditerBokCtrl', ['$scope', '$location', '$routeParams', 'bokService', function($scope, $location, $routeParams, bokService) {
+    $scope.editorEnabled = true;
+
+    $scope.bok = bokService.getBok($routeParams.id);
+    var bokFoerEditering = angular.copy($scope.bok);
+
+    $scope.lagreBok = function() {
+        bokService.oppdaterBok($routeParams.id);
+        $location.path('/');
+    }
+    $scope.validateInput = function(field) {
+        return field.$invalid && field.$dirty
+    }
+    $scope.avbryt = function() {
+        $scope.bok = angular.copy(bokFoerEditering);
+    }
+}]);
+
+bokApp.controller('NyBokCtrl', ['$scope', '$location', '$routeParams', 'bokService', function($scope, $location, $routeParams, bokService) {
+    $scope.editorEnabled = true;
 
     $scope.bok = {};
-    var bokFoerEditering = {};
-    if ($routeParams.id) {
-        $scope.bok = bokService.getBok($routeParams.id);
-        bokFoerEditering = angular.copy($scope.bok);
-    }
-
     $scope.lagreBok = function() {
         bokService.lagreBok($scope.bok);
         $location.path('/');
@@ -26,49 +47,19 @@ bokApp.controller('BokCtrl', ['$scope', '$location', '$routeParams', 'bokService
         return field.$invalid && field.$dirty
     }
     $scope.avbryt = function() {
-        $scope.bok = bokFoerEditering;
+        $location.path('/');
     }
-    $scope.editer = function() {
-        bokFoerEditering = angular.copy($scope.bok);
-    }
-    $scope.editorEnabled = true;
 }]);
 
 bokApp.controller('HeaderController', ['$scope', '$location', function($scope, $location) {
     $scope.isActive = function(viewLocation) {
+        console.log($location.path());
         return viewLocation === $location.path();
     }
 }]);
 
 // SERVICES
-bokApp.service('bokServiceMock', function() {
-    var idSekvens = 0;
-    var boker = [
-        {id: idSekvens++, tittel:'Frost', forfatter:'Jan Banan'},
-        {id: idSekvens++, tittel:'The Hobbit', forfatter:'Per Persen'},
-        {id: idSekvens++, tittel:'Lone Survivor', forfatter:'Ola Normann'},
-        {id: idSekvens++, tittel:'The Hunger Games: Catching Fire', forfatter:'Hans Hansen'}
-    ];
-
-    return {
-        boker: function () {
-            return boker;
-        },
-        lagreBok: function(bok) {
-            bok.id = idSekvens++;
-            boker.push(bok);
-        },
-        getBok: function(id) {
-            var resultat = $.grep(boker, function(e) {return e.id == id});
-            if (resultat.length == 1) {
-                return resultat[0];
-            }
-            throw "fant ingen unik bok med id " + id;
-        }
-    };
-});
-
-bokApp.service('bokService', ['$firebase', function($firebase) {
+bokApp.service('bokService', ['$firebase' , function($firebase) {
     var ref = new Firebase("https://popping-fire-1561.firebaseio.com/");
     var boker = $firebase(ref);
 
@@ -78,6 +69,9 @@ bokApp.service('bokService', ['$firebase', function($firebase) {
         },
         lagreBok: function(bok) {
             var ref = boker.$add(bok);
+        },
+        oppdaterBok: function(id) {
+            var ref = boker.$save(id);
         },
         getBok: function(id) {
             return boker[id];

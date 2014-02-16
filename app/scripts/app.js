@@ -14,9 +14,17 @@ angular.module('bibliotekAngularApp', [
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/bok/:id?', {
+      .when('/bok/:id', {
         templateUrl: 'views/bok.html',
-        controller: 'BokCtrl'
+        controller: 'VisBokCtrl'
+      })
+      .when('/bok/:id/edit', {
+          templateUrl: 'views/bok.html',
+          controller: 'EditerBokCtrl'
+        })
+      .when('/bok/', {
+          templateUrl: 'views/bok.html',
+          controller: 'NyBokCtrl'
       })
       .otherwise({
         redirectTo: '/'
